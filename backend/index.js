@@ -19,6 +19,7 @@ const languageType = new GraphQLObjectType({
             type:GraphQLInt,
         },
         language:{
+            type:GraphQLString,
         },
         loved:{
             type:GraphQLBoolean

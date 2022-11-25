@@ -33,6 +33,14 @@ const rootQuery  = new GraphQLObjectType({
         languages : {
             type  : new GraphQLList(languageType),
             resolve: () => sendData
+        },
+        language : {
+            type : languageType,
+            args:{
+                id:{type:GraphQLInt}
+            },
+            // resolve: (parent, args, context, info)=>sendData.find( language=>language.id == args.id)
+            resolve: (_, {id}) => sendData.find( language=>language.id == id)
         }
     }
 })

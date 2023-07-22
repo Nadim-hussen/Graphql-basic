@@ -2,13 +2,38 @@ const { query } = require('express');
 const express = require('express');
 const app = express();
 const PORT = 8000;
-const {graphqlHTTP} = require('express-graphql')
-const {GraphQLObjectType, GraphQLInt, GraphQLBoolean,GraphQLList, GraphQLSchema, GraphQLString} = require('graphql')
+const {graphqlHTTP} = require('express-graphql');
+const { type } = require('express/lib/response');
+const {graphql, buildSchema, GraphQLObjectType, GraphQLInt, GraphQLBoolean,GraphQLList, GraphQLSchema, GraphQLString} = require('graphql')
 const sendData = [
     {id:1, language:"python",loved:true},
     {id:2, language:"c",loved:true},
     {id:3, language:"c++",loved:false},
 ]
+
+// Construct a schema, using GraphQL schema language
+var schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`)
+
+// The rootValue provides a resolver function for each API endpoint
+var rootValue = {
+  hello: () => {
+    return "Hello world!"
+  },
+}
+
+// Run the GraphQL query '{ hello }' and print out the response
+graphql({
+  schema,
+  source: "{ hello }",
+  rootValue,
+}).then(response => {
+  console.log(response)
+})
+
 // schema
 //  resolver
 const languageType = new GraphQLObjectType({
@@ -55,7 +80,7 @@ const rootQuery  = new GraphQLObjectType({
   }
 }
 */
-const schema = new GraphQLSchema({query:rootQuery})
+var schema = new GraphQLSchema({query:rootQuery})
 app.use('/graphql',graphqlHTTP({
     schema,
     graphiql:true,
